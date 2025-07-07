@@ -3,9 +3,7 @@ version: '3.8'
 services:
   ping-client:
     build: .
-    container_name: ping-client
-    depends_on:
-      - postgres
+    container_name: agent
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
