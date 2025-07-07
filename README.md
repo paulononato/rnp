@@ -72,21 +72,6 @@ docker exec -it postgres psql -U docker-user -d docker-db
 
 ---
 
-## **Conectividade entre containers**
-
-O container está conectado à rede `rnp-network`, permitindo que outros containers se comuniquem via o hostname `postgres`.
-
-Para usar essa rede em outro `docker-compose.yml`, adicione:
-
-```yaml
-networks:
-  default:
-    external: true
-    name: rnp-network
-```
-
----
-
 ## **Parar o ambiente**
 
 ```bash
