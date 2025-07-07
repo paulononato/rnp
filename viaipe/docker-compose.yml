@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  viaipe-agent:
+    build: .
+    container_name: viaipe-agent
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: docker-db
+      DB_USER: docker-user
+      DB_PASSWORD: docker-pass
+      SLEEP_SECONDS: 3600
+    networks:
+      - rnp-network
+
+networks:
+  rnp-network:
+    external: true
+    name: rnp-network
