@@ -10,7 +10,7 @@ services:
       DB_NAME: docker-db
       DB_USER: docker-user
       DB_PASSWORD: docker-pass
-      TARGETS: "google.com mp.br uol.com.br"
+      TARGETS: "google.com rnp.br uol.com.br"
       PACKET_COUNT: 30
       SLEEP_SECONDS: 60
     networks:
