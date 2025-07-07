@@ -19,6 +19,7 @@ while true; do
     echo "$JSON" | jq -c '.[]' | while read -r item; do
         client_id=$(echo "$item" | jq '.id')
         client_name=$(echo "$item" | jq -r '.name' | sed "s/'/''/g")
+        client_name="'$client_name'"  # insere aspas simples para o SQL
 
         avg_in=$(echo "$item" | jq '.data.interfaces[0].avg_in')
         avg_out=$(echo "$item" | jq '.data.interfaces[0].avg_out')
@@ -36,28 +37,18 @@ while true; do
             qualidade="Boa"
         fi
 
-        psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" <<EOF
-\set client_id $client_id
-\set client_name '$client_name'
-\set avg_in $avg_in
-\set avg_out $avg_out
-\set bandwidth $bandwidth
-\set avg_latency $avg_latency
-\set avg_loss $avg_loss
-\set availability $availability
-\set qualidade '$qualidade'
-
-INSERT INTO viaipe_metrics (
-    client_id, client_name, avg_in_bps, avg_out_bps,
-    bandwidth_mbps, avg_latency_ms, avg_loss_percent,
-    availability_percent, qualidade
-) VALUES (
-    :client_id, :client_name, :avg_in, :avg_out,
-    :bandwidth, :avg_latency, :avg_loss,
-    :availability, :qualidade
-);
-EOF
-
+        # Executa o insert
+        psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "
+            INSERT INTO viaipe_metrics (
+                client_id, client_name, avg_in_bps, avg_out_bps,
+                bandwidth_mbps, avg_latency_ms, avg_loss_percent,
+                availability_percent, qualidade
+            ) VALUES (
+                $client_id, $client_name, $avg_in, $avg_out,
+                $bandwidth, $avg_latency, $avg_loss,
+                $availability, '$qualidade'
+            );
+        "
     done
 
     echo "Aguardando $SLEEP_SECONDS segundos para próxima coleta..."
