@@ -1,7 +1,6 @@
 import requests
 import psycopg2
 import time
-
 import os
 
 DB_HOST = os.getenv("DB_HOST", "postgres")
@@ -10,7 +9,7 @@ DB_NAME = os.getenv("DB_NAME", "docker-db")
 DB_USER = os.getenv("DB_USER", "docker-user")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "docker-pass")
 API_URL = os.getenv("API_URL", "https://viaipe.rnp.br/api/norte")
-SLEEP_SECONDS = int(os.getenv("SLEEP_SECONDS", 3600))
+SLEEP_SECONDS = int(os.getenv("SLEEP_SECONDS", 10))
 
 
 def calcular_qualidade(avg_loss, avg_latency):
@@ -23,14 +22,15 @@ def calcular_qualidade(avg_loss, avg_latency):
 
 def main():
     while True:
-        print("Coletando dados da API do ViaIpe...")
+        print("\n==== Iniciando coleta de dados do ViaIpe ====")
 
         try:
             response = requests.get(API_URL, timeout=10)
             response.raise_for_status()
             data = response.json()
+            print(f"✔️  {len(data)} clientes encontrados na API.")
         except Exception as e:
-            print(f"Erro ao buscar dados da API: {e}")
+            print(f"❌ Erro ao buscar dados da API: {e}")
             time.sleep(SLEEP_SECONDS)
             continue
 
@@ -45,42 +45,48 @@ def main():
             cursor = conn.cursor()
 
             for item in data:
-                client_id = item.get("id")
-                client_name = item.get("name", "").replace("'", "''")
+                try:
+                    client_id = item.get("id")
+                    client_name = item.get("name", "").replace("'", "''")
 
-                interfaces = item.get("data", {}).get("interfaces", [])
-                smoke = item.get("data", {}).get("smoke", {})
+                    interfaces = item.get("data", {}).get("interfaces", [])
+                    smoke = item.get("data", {}).get("smoke", {})
 
-                avg_in = interfaces[0].get("avg_in", 0) if interfaces else 0
-                avg_out = interfaces[0].get("avg_out", 0) if interfaces else 0
-                avg_loss = smoke.get("avg_loss", 0)
-                avg_latency = smoke.get("avg_val", 0)
+                    avg_in = interfaces[0].get("avg_in", 0) if interfaces else 0
+                    avg_out = interfaces[0].get("avg_out", 0) if interfaces else 0
+                    avg_loss = smoke.get("avg_loss", 0)
+                    avg_latency = smoke.get("avg_val", 0)
 
-                bandwidth = (avg_in + avg_out) / 1_000_000
-                availability = 100 - avg_loss
-                qualidade = calcular_qualidade(avg_loss, avg_latency)
+                    bandwidth = (avg_in + avg_out) / 1_000_000
+                    availability = 100 - avg_loss
+                    qualidade = calcular_qualidade(avg_loss, avg_latency)
 
-                cursor.execute("""
-                    INSERT INTO viaipe_metrics (
-                        client_id, client_name, avg_in_bps, avg_out_bps,
-                        bandwidth_mbps, avg_latency_ms, avg_loss_percent,
-                        availability_percent, qualidade
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (
-                    client_id, client_name, avg_in, avg_out,
-                    bandwidth, avg_latency, avg_loss,
-                    availability, qualidade
-                ))
+                    cursor.execute("""
+                        INSERT INTO viaipe_metrics (
+                            client_id, client_name, avg_in_bps, avg_out_bps,
+                            bandwidth_mbps, avg_latency_ms, avg_loss_percent,
+                            availability_percent, qualidade
+                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """, (
+                        client_id, client_name, avg_in, avg_out,
+                        bandwidth, avg_latency, avg_loss,
+                        availability, qualidade
+                    ))
+
+                    print(f"✔️  Inserido: {client_name} (ID: {client_id})")
+
+                except Exception as item_error:
+                    print(f"⚠️  Erro ao processar cliente ID {item.get('id')}: {item_error}")
 
             conn.commit()
             cursor.close()
             conn.close()
-            print("Dados inseridos com sucesso.")
+            print("✅ Todos os dados foram inseridos com sucesso.")
 
         except Exception as e:
-            print(f"Erro ao inserir no banco: {e}")
+            print(f"❌ Erro ao conectar/inserir no banco: {e}")
 
-        print(f"Aguardando {SLEEP_SECONDS} segundos para próxima coleta...")
+        print(f"⏳ Aguardando {SLEEP_SECONDS} segundos para próxima coleta...")
         time.sleep(SLEEP_SECONDS)
 
 
