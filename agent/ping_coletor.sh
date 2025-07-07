@@ -32,15 +32,16 @@ run_check_for_site() {
         PACKET_LOSS=100.0
     fi
 
-    # --- HTTP ---
-    HTTP_DATA=$(curl -o /dev/null -s -w "%{http_code} %{time_total}" --max-time 5 "http://$SITE")
+    # --- HTTP (via HTTPS + redirecionamento) ---
+    HTTP_DATA=$(curl -L -o /dev/null -s -w "%{http_code} %{time_total}" --max-time 5 "https://$SITE")
     HTTP_STATUS=$(echo "$HTTP_DATA" | awk '{print $1}')
     HTTP_TIME=$(echo "$HTTP_DATA" | awk '{print $2}')
-    if [ -z "$HTTP_STATUS" ]; then
+
+    if [[ -z "$HTTP_STATUS" || -z "$HTTP_TIME" ]]; then
         HTTP_STATUS="NULL"
         HTTP_TIME="NULL"
     else
-        HTTP_TIME=$(awk "BEGIN {print $HTTP_TIME * 1000}")  # converte para ms
+        HTTP_TIME=$(awk "BEGIN {print $HTTP_TIME * 1000}")  # converte para milissegundos
     fi
 
     # --- INSERT ---
