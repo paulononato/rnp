@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: docker-db
+      POSTGRES_USER: docker-user
+      POSTGRES_PASSWORD: docker-pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../postgres/01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    networks:
+      - rnp-network
+
+  viaipe-agent:
+    build:
+      context: ../viaipe
+    container_name: viaipe-agent
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: docker-db
+      DB_USER: docker-user
+      DB_PASSWORD: docker-pass
+      SLEEP_SECONDS: 3600
+    networks:
+      - rnp-network
+
+  ping-client:
+    build:
+      context: ../agent
+    container_name: agent
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: docker-db
+      DB_USER: docker-user
+      DB_PASSWORD: docker-pass
+      TARGETS: "google.com rnp.br uol.com.br"
+      PACKET_COUNT: 30
+      SLEEP_SECONDS: 60
+    networks:
+      - rnp-network
+
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: adminrnp
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - rnp-network
+
+volumes:
+  grafana-storage:
+
+networks:
+  rnp-network:
+    external: true
+    name: rnp-network
