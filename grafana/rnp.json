@@ -930,7 +930,7 @@
           "table": "ping_metrics"
         }
       ],
-      "title": "STATUS MP.Br",
+      "title": "STATUS MP.BR",
       "type": "stat"
     },
     {
@@ -1032,6 +1032,6 @@
   "timezone": "browser",
   "title": "RNP",
   "uid": "cer8hmyjriu4gb",
-  "version": 10,
+  "version": 11,
   "weekStart": ""
 }
