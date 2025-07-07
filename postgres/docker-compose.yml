@@ -6,9 +6,9 @@ services:
     container_name: ping-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: pingdb
-      POSTGRES_USER: pinguser
-      POSTGRES_PASSWORD: pingpass
+      POSTGRES_DB: docker-db
+      POSTGRES_USER: docker-user
+      POSTGRES_PASSWORD: docker-pass
     ports:
       - "5432:5432"
     volumes:
