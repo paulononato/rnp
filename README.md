@@ -1,38 +1,104 @@
-# **RNP - Ambiente de Teste com PostgreSQL**
+# RNP - Ambiente de Teste com PostgreSQL
 
-Este ambiente foi criado para fins de validação e coleta de dados com um banco PostgreSQL pronto para uso. 
-O ambiente utiliza arquitetura Docker e Docker Compose.
+Este ambiente foi criado para fins de validação e coleta de dados com um banco PostgreSQL pronto para uso. A solução utiliza Docker e Docker Compose.
 
-A solução possui 4 containers:
-- postgres - Utilizado para banco de dados
-- agent    - SO Linux com os recursos de ip-utils (PING) e CURL, para obter dados de performance de pacotes e páginas web, respectivamente.
-- grafana  - container para provisionar uma instância do Grafana e visualizar dados.
-- viaipe-agent - SO Linux com um script em Python para tratar os dados da API e gravar no banco de dados. Foi escolhido python tenho mais prática para manipular json, tratar caracteres, e inserir no banco de dados.
+## Arquitetura
 
-O container do agente possui um shell script chamado ping_coletor.sh que envia 30 pacotes para os destinos, a cada 30 segundos, calcula as perdas e tempos de resposta, e envia os resultados para o banco de dados postgres.
-Foi criada uma tabela no postgres com arquitetura de simples leitura para o grafana interpretar. A tabela principal tem o nome ping_metrics e possui as colunas id, target, response_time_ms, packet_loss_percent, http_status_code, http_load_time_ms, created_at.
+A aplicação é composta por quatro containers integrados em uma rede Docker:
 
-Deixei o container do grafana para ser acessado pela web no endereço:
-http://homolog.elevartech.com.br:3000
-Usuario: admin 
-Password: adminrnp
+- **postgres**: Banco de dados PostgreSQL.
+- **viaipe-agent**: Container Linux com script Python que consome a API do ViaIpe, trata os dados e os insere no banco.
+- **ping-client**: Container Linux com `ping` e `curl`, executando o script `ping_coletor.sh` que realiza testes de rede e envia os dados para o banco.
+- **grafana**: Interface web para visualização dos dados via dashboards.
+
+Fluxo de dados:
+1. O `ping-client` coleta dados de conectividade (latência, perda, HTTP) e envia para o banco.
+2. O `viaipe-agent` consome periodicamente a API pública do ViaIpe e insere os dados tratados no banco.
+3. O `grafana` se conecta ao PostgreSQL e exibe os dados dos dois agentes em painéis interativos.
+
+## Container `ping-client`
+
+Executa o shell script `ping_coletor.sh` que:
+- Envia 30 pacotes ICMP a cada 30 segundos para os destinos definidos.
+- Calcula perda de pacotes, tempo médio de resposta e também coleta status HTTP e tempo de carregamento.
+- Insere os dados na tabela `ping_metrics`.
+
+### Estrutura da Tabela `ping_metrics`
+
+Esta tabela armazena as métricas coletadas pelos pings e requisições HTTP realizadas pelo `ping-client`.
+
+| Coluna               | Tipo           | Descrição                                                                 |
+|----------------------|----------------|---------------------------------------------------------------------------|
+| `id`                 | integer        | Identificador único (chave primária).                                     |
+| `target`             | text           | Endereço de destino do ping ou requisição HTTP.                           |
+| `response_time_ms`   | double precision | Tempo médio de resposta do ping em milissegundos.                       |
+| `packet_loss_percent`| double precision | Porcentagem de perda de pacotes do ping.                                |
+| `http_status_code`   | integer        | Código de status HTTP retornado na requisição (ex: 200, 404, etc.).       |
+| `http_load_time_ms`  | double precision | Tempo de carregamento da página em milissegundos.                       |
+| `created_at`         | timestamp      | Momento em que os dados foram coletados.                                  |
 
 ---
 
-## **Requisitos mínimos**
+## Container `viaipe-agent`
+
+Executa o script Python `viaipe_agent.py`, que:
+- Consome a API pública do ViaIpe: https://viaipe.rnp.br/api/norte
+- Trata os dados (bandwidth, latência, perdas, disponibilidade)
+- Calcula uma classificação de qualidade (Boa, Moderada, Ruim)
+- Insere na tabela `viaipe_metrics` do banco PostgreSQL
+
+### Estrutura da Tabela `viaipe_metrics`
+
+Esta tabela armazena os dados obtidos da API do ViaIpe com informações de banda, latência, perda e disponibilidade.
+
+| Coluna                | Tipo                 | Descrição                                                                 |
+|-----------------------|----------------------|---------------------------------------------------------------------------|
+| `id`                  | integer              | Identificador único (chave primária).                                     |
+| `client_id`           | text                 | Identificador do cliente na API do ViaIpe.                                |
+| `client_name`         | varchar(255)         | Nome do cliente.                                                          |
+| `avg_in_bps`          | double precision     | Média de tráfego de entrada em bps.                                       |
+| `avg_out_bps`         | double precision     | Média de tráfego de saída em bps.                                         |
+| `bandwidth_mbps`      | double precision     | Banda média total (entrada + saída) convertida para Mbps.                 |
+| `avg_latency_ms`      | double precision     | Latência média em milissegundos.                                          |
+| `avg_loss_percent`    | double precision     | Porcentagem média de perda de pacotes.                                    |
+| `availability_percent`| double precision     | Disponibilidade calculada (100 - perda).                                  |
+| `qualidade`           | varchar(50)          | Classificação da qualidade com base na latência e perda.                  |
+| `collected_at`        | timestamp            | Timestamp da coleta dos dados.  
+
+## Acesso ao Grafana
+
+O Grafana está disponível via web:
+
+http://homolog.elevartech.com.br:3000  
+Usuário: admin  
+Senha: adminrnp
+
+## Requisitos
 
 - Linux com Docker e Docker Compose instalados
-- Versões validadas:
-  - Docker Engine: **28.3.1**
-  - Docker Compose: **v2.38.1**
-## **Dependências **
 
-O container agent precisa dos seguintes componentes: curl, iputils-ping, postgresql-client, ca-certificates
-O container viaipe-agent precisa dos seguintes componentes: python3, python3-pip, python3-venv, curl, libpq-dev, gcc.
+### Versões testadas
 
----
+- Docker Engine: 28.3.1  
+- Docker Compose: v2.38.1
 
-## **Instalação do Docker e Compose no Ubuntu**
+## Dependências
+
+**Container `agent`**:
+- curl
+- iputils-ping
+- postgresql-client
+- ca-certificates
+
+**Container `viaipe-agent`**:
+- python3
+- python3-pip
+- python3-venv
+- curl
+- libpq-dev
+- gcc
+
+## Instalação do Docker e Docker Compose no Ubuntu
 
 ```bash
 sudo apt update
@@ -40,68 +106,60 @@ sudo apt install -y ca-certificates curl gnupg lsb-release
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-  https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ```
 
----
+## Passos para execução
 
-## **Passos para execução**
-
-### 1. Clonar o repositório
+1. **Clonar o repositório**
 
 ```bash
 git clone https://github.com/paulononato/rnp.git
 ```
 
-### 2. Acessar o diretorio rnp/infra e executar o docker compose
-
-Executar o docker compose
+2. **Executar o Docker Compose**
 
 ```bash
+cd rnp/infra
 docker compose up -d
 ```
-## [INFO] **Detalhes do PostgreSQL**
 
-- Host interno (entre containers): `postgres`
-- Porta exposta: `5432`
-- Banco de dados: `docker-db`
-- Usuário: `docker-user`
-- Senha: `docker-pass`
+### Dados de conexão do PostgreSQL
 
-### 5. Acesasr o Grafana na porta 3000
-http://[ip_do_docker]:3000
+- Host interno: postgres  
+- Porta: 5432  
+- Banco: docker-db  
+- Usuário: docker-user  
+- Senha: docker-pass
 
-Deixei o container do grafana para ser acessado pela web no endereço:
-http://homolog.elevartech.com.br:3000
-Usuario: admin 
-Password: adminrnp
+3. **Acessar o Grafana**
 
+http://[ip_do_host]:3000  
+Usuário: admin  
+Senha: adminrnp
 
-### 6. Conectar Grafana a fonte de dados Postgres
-1- Menu Grafana
-2- Connections
-3- Data sources
-4- Add Datasource (Pesquisar por Postgresql)
-5- Preencher com os dados:
-Host URL: postgres:5432
-database name: docker-db
-Username: docker-user
-Password: docker-pass
+## Conectar Grafana ao PostgreSQL
 
-### 7. Importar o JSON do painel criado
-1- Acessar o Menu Dashboards
-2- Apertar o botão NEW, em seguida IMPORT
-3- Fazer upload do JSON abaixo.
+1. Vá até o menu lateral do Grafana  
+2. Acesse `Connections > Data sources > Add data source`  
+3. Selecione **PostgreSQL**  
+4. Preencha os dados:
 
-O jSON está no repositório e pode  pode ser baixado do link: 
-Atenção: É necessário alterar o UID do DataSource do JSON. O UID tem que ser o mesmo do datasource que você conectou no passo 6.
+- Host: postgres:5432  
+- Database: docker-db  
+- Username: docker-user  
+- Password: docker-pass
+
+## Importar JSON do Dashboard
+
+1. No Grafana, vá em `Dashboards > New > Import`  
+2. Faça upload do JSON localizado no repositório:
 
 https://github.com/paulononato/rnp/blob/main/grafana/rnp.json
-blob:https://github.com/d3eb68bd-45f6-4542-a6b4-56b2f0eebfc6
+
+**Importante**: Altere o `uid` do datasource no JSON para ser igual ao UID criado no passo anterior (ao configurar o PostgreSQL).
