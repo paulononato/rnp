@@ -7,7 +7,7 @@ DB_NAME="${DB_NAME:-docker-db}"
 DB_USER="${DB_USER:-docker-user}"
 DB_PASSWORD="${DB_PASSWORD:-docker-pass}"
 API_URL="${API_URL:-https://viaipe.rnp.br/api/norte}"
-SLEEP_SECONDS="${SLEEP_SECONDS:-3600}"  # padrão: 1 hora
+SLEEP_SECONDS="${SLEEP_SECONDS:-30}"  # padrão: 1 hora
 
 export PGPASSWORD="$DB_PASSWORD"
 
