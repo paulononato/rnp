@@ -8,7 +8,7 @@ DB_PASSWORD="${DB_PASSWORD:-docker-pass}"
 
 SITES=(${TARGETS:-"google.com github.com uol.com.br"})
 PACKET_COUNT="${PACKET_COUNT:-30}"
-SLEEP_SECONDS="${SLEEP_SECONDS:-60}"
+SLEEP_SECONDS="${SLEEP_SECONDS:-30}"
 
 export PGPASSWORD="$DB_PASSWORD"
 
