@@ -67,7 +67,7 @@ docker-compose up -d
 ### Acesso via terminal:
 
 ```bash
-docker exec -it ping-postgres psql -U docker-user -d docker-db
+docker exec -it postgres psql -U docker-user -d docker-db
 ```
 
 ---
