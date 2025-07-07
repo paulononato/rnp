@@ -33,15 +33,18 @@ run_check_for_site() {
     fi
 
     # --- HTTP (via HTTPS + redirecionamento) ---
-    HTTP_DATA=$(curl -L -o /dev/null -s -w "%{http_code} %{time_total}" --max-time 5 "https://$SITE")
-    HTTP_STATUS=$(echo "$HTTP_DATA" | awk '{print $1}')
-    HTTP_TIME=$(echo "$HTTP_DATA" | awk '{print $2}')
+    HTTP_STATUS=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 5 "https://$SITE")
+    HTTP_TIME=$(curl -L -s -o /dev/null -w "%{time_total}" --max-time 5 "https://$SITE")
 
-    if [[ -z "$HTTP_STATUS" || -z "$HTTP_TIME" ]]; then
+    # Validações
+    if [[ ! "$HTTP_STATUS" =~ ^[0-9]{3}$ ]]; then
         HTTP_STATUS="NULL"
+    fi
+
+    if [[ ! "$HTTP_TIME" =~ ^[0-9.]+$ ]]; then
         HTTP_TIME="NULL"
     else
-        HTTP_TIME=$(awk "BEGIN {print $HTTP_TIME * 1000}")  # converte para milissegundos
+        HTTP_TIME=$(awk "BEGIN {print $HTTP_TIME * 1000}")
     fi
 
     # --- INSERT ---
