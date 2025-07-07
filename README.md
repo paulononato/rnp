@@ -67,7 +67,7 @@ Esta tabela armazena os dados obtidos da API do ViaIpe com informações de band
 
 ## Acesso ao Grafana
 
-O Grafana está disponível via web:
+O Grafana dessa solução está disponível via web:
 
 http://homolog.elevartech.com.br:3000  
 Usuário: admin  
@@ -142,6 +142,13 @@ docker compose up -d
 http://[ip_do_host]:3000  
 Usuário: admin  
 Senha: adminrnp
+
+O Grafana dessa solução está disponível via web:
+
+http://homolog.elevartech.com.br:3000  
+Usuário: admin  
+Senha: adminrnp
+
 
 ## Conectar Grafana ao PostgreSQL
 
