@@ -1,6 +1,21 @@
 # **RNP - Ambiente de Teste com PostgreSQL**
 
-Este ambiente foi criado para fins de teste e coleta de dados com um banco PostgreSQL pronto para uso. Ele utiliza Docker e Docker Compose e executa um script de inicialização para criar a estrutura da base.
+Este ambiente foi criado para fins de validação e coleta de dados com um banco PostgreSQL pronto para uso. 
+O ambiente utiliza arquitetura Docker e Docker Compose.
+
+A solução possui 3 containers:
+- postgres - Utilizado para banco de dados
+- agent    - SO Linux com os recursos de ip-utils (PING) e CURL, para obter dados de performance de pacotes e páginas web, respectivamente.
+- grafana  - container para provisionar uma instância do Grafana e visualizar dados.
+
+O container do agente possui um shell script chamado ping_coletor.sh que envia 30 pacotes para os destinos, a cada 30 segundos, calcula as perdas e tempos de resposta, e envia os resultados para o banco de dados postgres.
+Foi criada uma tabela no postgres com arquitetura de simples leitura para o grafana interpretar. A tabela principal tem o nome ping_metrics e possui as colunas id, target, response_time_ms, packet_loss_percent, http_status_code, http_load_time_ms, created_at.
+
+O container do grafana conecta no postgres e apresenta os dados. Há um json com um painel para visualização dos dados dessa atividade.
+
+Deixei o container do grafana para ser acessado pela web no endereço:
+
+http://homolog.elevartech.com.br:3000
 
 ---
 
