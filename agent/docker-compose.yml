@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  ping-client:
+    build: .
+    container_name: ping-client
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: docker-db
+      DB_USER: docker-user
+      DB_PASSWORD: docker-pass
+      TARGETS: "google.com github.com uol.com.br"
+      PACKET_COUNT: 30
+      SLEEP_SECONDS: 60
+    networks:
+      - rnp-network
+
+networks:
+  rnp-network:
+    external: true
+    name: rnp-network
