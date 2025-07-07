@@ -182,7 +182,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  packet_loss_percent AS \"Perda de Pacotes MP\"\r\nFROM ping_metrics\r\nWHERE target = 'mp.br'\r\n",
+          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  packet_loss_percent AS \"Perda de Pacotes RNP\"\r\nFROM ping_metrics\r\nWHERE target = 'rnp.br'\r\n",
           "refId": "github.com",
           "sql": {
             "columns": [
@@ -368,7 +368,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  http_status_code AS \"Status MP\"\r\nFROM ping_metrics\r\nWHERE target = 'mp.br'\r\n",
+          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  http_status_code AS \"Status RNP\"\r\nFROM ping_metrics\r\nWHERE target = 'rnp.br'\r\n",
           "refId": "github.com",
           "sql": {
             "columns": [
@@ -553,7 +553,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  response_time_ms AS \"Latência MP\"\r\nFROM ping_metrics\r\nWHERE target = 'mp.br'\r\n",
+          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  response_time_ms AS \"Latência RNP\"\r\nFROM ping_metrics\r\nWHERE target = 'rnp.br'\r\n",
           "refId": "github.com",
           "sql": {
             "columns": [
@@ -739,7 +739,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  http_load_time_ms AS \"Tempo de Carregamento MP\"\r\nFROM ping_metrics\r\nWHERE target = 'mp.br'\r\n",
+          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  http_load_time_ms AS \"Tempo de Carregamento RNP\"\r\nFROM ping_metrics\r\nWHERE target = 'rnp.br'\r\n",
           "refId": "github.com",
           "sql": {
             "columns": [
@@ -908,7 +908,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  http_status_code AS \"Status MP\"\r\nFROM ping_metrics\r\nWHERE target = 'mp.br'",
+          "rawSql": "SELECT \r\n  created_at AS \"time\", \r\n  http_status_code AS \"Status MP\"\r\nFROM ping_metrics\r\nWHERE target = 'rnp.br'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -930,7 +930,7 @@
           "table": "ping_metrics"
         }
       ],
-      "title": "STATUS MP.BR",
+      "title": "STATUS RNP.BR",
       "type": "stat"
     },
     {
@@ -1032,6 +1032,6 @@
   "timezone": "browser",
   "title": "RNP",
   "uid": "cer8hmyjriu4gb",
-  "version": 11,
+  "version": 12,
   "weekStart": ""
 }
