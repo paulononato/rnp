@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS ping_metrics (
 -- Tabela para métricas da API ViaIpe
 CREATE TABLE IF NOT EXISTS viaipe_metrics (
     id SERIAL PRIMARY KEY,
-    client_id INTEGER,
+    client_id TEXT,
     client_name VARCHAR(255),
     avg_in_bps FLOAT,
     avg_out_bps FLOAT,
