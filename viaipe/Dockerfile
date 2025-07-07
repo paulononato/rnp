@@ -25,4 +25,4 @@ RUN python3 -m venv /opt/venv && \
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Executa o script
-CMD ["python3", "viaipe_agent.py"]
+CMD ["python3", "/app/viaipe_agent.py"]
