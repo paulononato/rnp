@@ -16,7 +16,8 @@ O container do grafana conecta no postgres e apresenta os dados. Há um json com
 Deixei o container do grafana para ser acessado pela web no endereço:
 
 http://homolog.elevartech.com.br:3000
-
+Usuario: admin 
+Password: adminrnp
 ---
 
 ## **Requisitos mínimos**
