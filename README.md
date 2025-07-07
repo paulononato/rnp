@@ -47,16 +47,7 @@ git clone https://github.com/paulononato/rnp.git
 cd rnp/postgres
 docker compose up -d
 ```
-
-Caso esteja usando o Docker Compose clássico:
-
-```bash
-docker-compose up -d
-```
-
----
-
-## **Detalhes do PostgreSQL**
+## [INFO] **Detalhes do PostgreSQL**
 
 - Host interno (entre containers): `postgres`
 - Porta exposta: `5432`
@@ -64,32 +55,41 @@ docker-compose up -d
 - Usuário: `docker-user`
 - Senha: `docker-pass`
 
-### Acesso via terminal:
+### 3. Subir o agent
 
 ```bash
-docker exec -it postgres psql -U docker-user -d docker-db
+cd rnp/agent
+docker compose up -d
 ```
-
----
-
-## **Parar o ambiente**
+### 4. Subir o Grafana
 
 ```bash
-docker compose down
+cd rnp/grafana
+docker compose up -d
 ```
+### 5. Acesasr o Grafana na porta 3000
+http://[ip_do_docker]:3000
+Acessar com as credenciais:
 
----
+Usuario: admin
+Password: adminrnp
 
-## **Estrutura do diretório**
+### 6. Conectar Grafana a fonte de dados Postgres
+1- Menu Grafana
+2- Connections
+3- Data sources
+4- Add Datasource (Pesquisar por Postgresql)
+5- Preencher com os dados:
+Host URL: postgres:5432
+database name: docker-db
+Username: docker-user
+Password: docker-pass
 
-```
-postgres/
-├── docker-compose.yml
-└── 01-init.sql
-```
+### 7. Importar o JSON do painel criado
+1- Acessar o Menu Dashboards
+2- Apertar o botão NEW, em seguida IMPORT
+3- Fazer upload do JSON abaixo.
 
----
-
-## **Licença**
-
-Uso interno e experimental.
+O jSON está no repositório e pode  pode ser baixado do link: 
+https://github.com/paulononato/rnp/blob/main/grafana/rnp.json
+blob:https://github.com/d3eb68bd-45f6-4542-a6b4-56b2f0eebfc6
