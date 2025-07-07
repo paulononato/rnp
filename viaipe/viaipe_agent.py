@@ -1,3 +1,5 @@
+print(">>> Script viaipe_agent.py iniciou")
+
 import requests
 import psycopg2
 import time
