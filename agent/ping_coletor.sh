@@ -6,7 +6,7 @@ DB_NAME="${DB_NAME:-docker-db}"
 DB_USER="${DB_USER:-docker-user}"
 DB_PASSWORD="${DB_PASSWORD:-docker-pass}"
 
-SITES=(${TARGETS:-"google.com github.com uol.com.br"})
+SITES=(${TARGETS:-"google.com mp.br uol.com.br"})
 PACKET_COUNT="${PACKET_COUNT:-30}"
 SLEEP_SECONDS="${SLEEP_SECONDS:-30}"
 
