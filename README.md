@@ -39,12 +39,12 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 ```bash
 git clone https://github.com/paulononato/rnp.git
-cd rnp/postgres
 ```
 
-### 2. Subir o ambiente
+### 2. Subir o ambiente Postgres
 
 ```bash
+cd rnp/postgres
 docker compose up -d
 ```
 
