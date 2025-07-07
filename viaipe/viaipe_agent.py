@@ -44,6 +44,10 @@ def main():
             )
             cursor = conn.cursor()
 
+            # Apagar dados antigos somente agora
+            cursor.execute("DELETE FROM viaipe_metrics")
+            print("🧹 Dados anteriores apagados.")
+
             for item in data:
                 try:
                     client_id = item.get("id")
@@ -77,7 +81,7 @@ def main():
 
                 except Exception as item_error:
                     print(f"⚠️  Erro ao processar cliente ID {item.get('id')}: {item_error}")
-                    conn.rollback()  # <- rollback individual aqui
+                    conn.rollback()
 
             conn.commit()
             cursor.close()
