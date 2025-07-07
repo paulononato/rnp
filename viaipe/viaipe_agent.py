@@ -77,6 +77,7 @@ def main():
 
                 except Exception as item_error:
                     print(f"⚠️  Erro ao processar cliente ID {item.get('id')}: {item_error}")
+                    conn.rollback()  # <- rollback individual aqui
 
             conn.commit()
             cursor.close()
