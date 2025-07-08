@@ -171,3 +171,7 @@ https://github.com/paulononato/rnp/blob/main/grafana/rnp.json
 https://github.com/paulononato/rnp/blob/main/grafana/viaipe.json
 
 **Importante**: Altere o `uid` do datasource no JSON para ser igual ao UID criado no passo anterior (ao configurar o PostgreSQL).
+
+![Dashboard 1](https://i.postimg.cc/TPsVpJhF/dash01.png)
+
+![Dashboard 2](https://i.postimg.cc/d3PG9Q29/dash02.png)
