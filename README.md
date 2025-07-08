@@ -168,5 +168,6 @@ Senha: adminrnp
 2. Faça upload do JSON localizado no repositório:
 
 https://github.com/paulononato/rnp/blob/main/grafana/rnp.json
+https://github.com/paulononato/rnp/blob/main/grafana/viaipe.json
 
 **Importante**: Altere o `uid` do datasource no JSON para ser igual ao UID criado no passo anterior (ao configurar o PostgreSQL).
