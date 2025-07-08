@@ -18,13 +18,13 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 3,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "eer8gcmffm5fkb"
+        "uid": "eer9alovw1c74f"
       },
       "fieldConfig": {
         "defaults": {
@@ -104,7 +104,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -147,7 +147,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -176,7 +176,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -209,7 +209,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "eer8gcmffm5fkb"
+        "uid": "eer9alovw1c74f"
       },
       "description": "",
       "fieldConfig": {
@@ -264,7 +264,32 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Status RNP"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -290,7 +315,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -333,7 +358,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -362,7 +387,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -395,7 +420,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "eer8gcmffm5fkb"
+        "uid": "eer9alovw1c74f"
       },
       "fieldConfig": {
         "defaults": {
@@ -475,7 +500,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -518,7 +543,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -547,7 +572,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -580,7 +605,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "eer8gcmffm5fkb"
+        "uid": "eer9alovw1c74f"
       },
       "description": "",
       "fieldConfig": {
@@ -661,7 +686,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -704,7 +729,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -733,7 +758,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -766,7 +791,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "eer8gcmffm5fkb"
+        "uid": "eer9alovw1c74f"
       },
       "fieldConfig": {
         "defaults": {
@@ -818,7 +843,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -851,7 +876,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "eer8gcmffm5fkb"
+        "uid": "eer9alovw1c74f"
       },
       "fieldConfig": {
         "defaults": {
@@ -903,7 +928,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -936,7 +961,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "eer8gcmffm5fkb"
+        "uid": "eer9alovw1c74f"
       },
       "fieldConfig": {
         "defaults": {
@@ -988,7 +1013,7 @@
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "eer8gcmffm5fkb"
+            "uid": "eer9alovw1c74f"
           },
           "editorMode": "code",
           "format": "table",
@@ -1032,6 +1057,6 @@
   "timezone": "browser",
   "title": "RNP",
   "uid": "cer8hmyjriu4gb",
-  "version": 12,
+  "version": 2,
   "weekStart": ""
 }
